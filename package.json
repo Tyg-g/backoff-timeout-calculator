@@ -1,0 +1,24 @@
+{
+  "name": "timeout-calculator",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "version": "vinxi version"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.0",
+    "@solidjs/start": "^1.1.0",
+    "@tailwindcss/vite": "^4.1.17",
+    "daisyui": "^5.5.8",
+    "firebase-functions": "^7.0.1",
+    "solid-charts": "^0.0.2",
+    "solid-js": "^1.9.5",
+    "tailwindcss": "^4.1.17",
+    "vinxi": "^0.5.7"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

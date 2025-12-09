@@ -1,0 +1,42 @@
+{
+  "emulators": {
+    "hosting": {
+      "host": "localhost"
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  },
+  "functions": {
+    "source": ".output/server"
+  },
+  "hosting": {
+    "public": ".output/public",
+    "cleanUrls": true,
+    "ignore": [
+      "**/_server/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "function": {
+          "functionId": "server",
+          "region": "europe-west1"
+        }
+      }
+    ],
+    "headers":[
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Frame-Options", "value": "DENY" },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+          { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" },
+          { "key": "Strict-Transport-Security", "value": "max-age=86401; includeSubDomains" }
+        ]
+      }
+    ]
+  }
+}

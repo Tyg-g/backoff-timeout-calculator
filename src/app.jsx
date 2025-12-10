@@ -4,18 +4,23 @@ import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
 import "./app.css";
 
+import PageHeader from "./components/Header";
+
+
+function RootLayout(props) {
+  return (
+    <MetaProvider>
+      <Title>Timeout Calculator</Title>
+      <PageHeader />
+      <Suspense>{props.children}</Suspense>
+    </MetaProvider>
+  );
+}
+
+
 export default function App() {
   return (
-    <Router
-      root={props => (
-        <MetaProvider>
-          <Title>SolidStart - Basic</Title>
-          <a href="/">Index</a>
-          <a href="/about">About</a>
-          <Suspense>{props.children}</Suspense>
-        </MetaProvider>
-      )}
-    >
+    <Router root={RootLayout}>
       <FileRoutes />
     </Router>
   );

@@ -1,5 +1,14 @@
 import { createEffect, createSignal, splitProps } from "solid-js";
 
+export function Navbar(props) {
+  return (
+    <div className={`navbar ${props.className}`}>
+      {props.children}
+    </div>
+  );
+}
+
+
 const parseAttrNumber = (value) => {
   if (value === undefined || value === null || value === "") {
     return undefined;

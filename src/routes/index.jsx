@@ -1,22 +1,26 @@
 import { Title } from "@solidjs/meta";
-import { For, Show, createMemo, createSignal } from "solid-js";
+import { For, Show, createMemo, createSignal, lazy } from "solid-js";
 
 import RetryInputs, { defaultRetryInputs } from "~/components/RetryInputs";
+
 import computeTimeline from "~/modules/compute-timeline.mjs";
 
 export default function Home() {
   const [inputs, setInputs] = createSignal(defaultRetryInputs);
-  const result = createMemo(() => computeTimeline(inputs()));
+  const result = createMemo( () => computeTimeline(inputs()) );
 
   const timeline = () => result().timeline;
   const totalRetries = () => result().totalRetries;
   const totalTimeMs = () => result().totalTimeMs;
 
+  const LazyTimelineGraph = lazy( () => import("~/components/Chart") );
+
   return (
     <main>
-      <Title>Retry Timeout Calculator</Title>
-      <h1>Retry Timeout Calculator</h1>
       <RetryInputs value={inputs()} onChange={setInputs} />
+      <div className='h-50 my-10 mx-1'>
+        <LazyTimelineGraph />
+      </div>
       <section>
         <h2>Results</h2>
         <p>Total retries: {totalRetries()}</p>

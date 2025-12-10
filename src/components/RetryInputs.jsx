@@ -1,5 +1,5 @@
 import { createEffect, createMemo, createSignal } from "solid-js";
-import { NumberInput } from '~/components/UI';
+import { NumberInput } from "~/components/UI";
 
 export const defaultRetryInputs = {
   retryCount: 8,
@@ -10,98 +10,16 @@ export const defaultRetryInputs = {
   totalTimeoutMs: 30000,
 };
 
-const INFINITY_PATTERN = /^inf(?:inity)?$/i;
-
-const formatValue = (value) => {
-  if (value === Infinity) {
-    return "Infinity";
-  }
-  return `${value}`;
-};
-
-const formatFiniteNumber = (value) => {
-  if (value === undefined || value === null) {
-    return "";
-  }
-  if (!Number.isFinite(value)) {
-    return "";
-  }
-  return `${value}`;
-};
-
-const formatInputs = (values) => ({
-  retryCount: formatValue(values.retryCount),
-  responseTimeMs: formatFiniteNumber(values.responseTimeMs),
-  initialDelayMs: formatFiniteNumber(values.initialDelayMs),
-  exponentialFactor: formatFiniteNumber(values.exponentialFactor),
-  maxDelayMs: formatFiniteNumber(values.maxDelayMs),
-  totalTimeoutMs: formatValue(values.totalTimeoutMs),
-});
-
-const parseRetryCountInput = (rawValue) => {
-  const trimmed = rawValue.trim();
-  if (!trimmed) {
-    return { valid: false };
-  }
-  if (INFINITY_PATTERN.test(trimmed)) {
-    return { valid: true, value: Infinity };
-  }
-  const parsed = Number(trimmed);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return { valid: false };
-  }
-  return { valid: true, value: Math.floor(parsed) };
-};
-
-const parseTimeoutInput = (rawValue) => {
-  const trimmed = rawValue.trim();
-  if (!trimmed) {
-    return { valid: false };
-  }
-  if (INFINITY_PATTERN.test(trimmed)) {
-    return { valid: true, value: Infinity };
-  }
-  const parsed = Number(trimmed);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return { valid: false };
-  }
-  return { valid: true, value: parsed };
-};
-
-const parseNonNegativeInput = (rawValue) => {
-  const trimmed = rawValue.trim();
-  if (!trimmed) {
-    return { valid: false };
-  }
-  const parsed = Number(trimmed);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return { valid: false };
-  }
-  return { valid: true, value: parsed };
-};
-
-const parseFactorInput = (rawValue) => {
-  const trimmed = rawValue.trim();
-  if (!trimmed) {
-    return { valid: false };
-  }
-  const parsed = Number(trimmed);
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    return { valid: false };
-  }
-  return { valid: true, value: parsed };
-};
-
 export default function RetryInputs(props) {
   const mergedValue = createMemo(() => ({
     ...defaultRetryInputs,
     ...props.value,
   }));
 
-  const [rawInputs, setRawInputs] = createSignal(formatInputs(mergedValue()));
+  const [inputs, setInputs] = createSignal(mergedValue());
 
   createEffect(() => {
-    setRawInputs(formatInputs(mergedValue()));
+    setInputs(mergedValue());
   });
 
   const emitChange = (nextValue) => {
@@ -110,29 +28,46 @@ export default function RetryInputs(props) {
     }
   };
 
-  const updateField = (key, value) => {
-    const current = mergedValue();
-    emitChange({ ...current, [key]: value });
-  };
+  let retryCountControl;
+  let totalTimeoutControl;
 
-  const handleInput = (key, parser) => (event) => {
-    const rawValue = event.currentTarget.value;
-    setRawInputs((current) => ({ ...current, [key]: rawValue }));
-    const result = parser(rawValue);
-    if (result.valid) {
-      updateField(key, result.value);
+  const handleChange = (key) => (nextValue) => {
+    if (Number.isNaN(nextValue)) {
+      return;
     }
+
+    const current = inputs();
+    const nextState = { ...current, [key]: nextValue };
+
+    if (nextValue === Infinity) {
+      if (key === "retryCount" && current.totalTimeoutMs === Infinity) {
+        totalTimeoutControl?.clearInfinity(defaultRetryInputs.totalTimeoutMs);
+        nextState.totalTimeoutMs = defaultRetryInputs.totalTimeoutMs;
+      } else if (key === "totalTimeoutMs" && current.retryCount === Infinity) {
+        retryCountControl?.clearInfinity(defaultRetryInputs.retryCount);
+        nextState.retryCount = defaultRetryInputs.retryCount;
+      }
+    }
+
+    setInputs(nextState);
+    emitChange(nextState);
   };
 
-  const value = rawInputs;
+  const value = inputs;
 
   return (
     <section className="bg-base-200 pt-2 pb-5 my-5 px-3">
       <form className="mx-auto max-w-2xl grid grid-flow-col grid-rows-2 gap-x-5 gap-y-1 items-end ">
         <NumberInput
           title="Retry count"
+          min="0"
+          step="1"
+          allowInf
           value={value().retryCount}
-          onInput={handleInput("retryCount", parseRetryCountInput)}
+          onChange={handleChange("retryCount")}
+          ref={(api) => {
+            retryCountControl = api;
+          }}
         />
         <NumberInput
           title="Response time"
@@ -140,7 +75,7 @@ export default function RetryInputs(props) {
           min="0"
           step="50"
           value={value().responseTimeMs}
-          onInput={handleInput("responseTimeMs", parseNonNegativeInput)}
+          onChange={handleChange("responseTimeMs")}
         />
         <NumberInput
           title="Initial delay"
@@ -148,14 +83,14 @@ export default function RetryInputs(props) {
           min="10"
           step="10"
           value={value().initialDelayMs}
-          onInput={handleInput("initialDelayMs", parseNonNegativeInput)}
+          onChange={handleChange("initialDelayMs")}
         />
         <NumberInput
           title="Exponential factor"
           min="0.1"
           step="0.1"
           value={value().exponentialFactor}
-          onInput={handleInput("exponentialFactor", parseFactorInput)}
+          onChange={handleChange("exponentialFactor")}
         />
         <NumberInput
           title="Max delay"
@@ -163,13 +98,18 @@ export default function RetryInputs(props) {
           min="10"
           step="1000"
           value={value().maxDelayMs}
-          onInput={handleInput("maxDelayMs", parseNonNegativeInput)}
+          onChange={handleChange("maxDelayMs")}
         />
         <NumberInput
           title="Total timeout"
           unit="ms"
+          min="0"
+          allowInf
           value={value().totalTimeoutMs}
-          onInput={handleInput("totalTimeoutMs", parseTimeoutInput)}
+          onChange={handleChange("totalTimeoutMs")}
+          ref={(api) => {
+            totalTimeoutControl = api;
+          }}
         />
       </form>
     </section>

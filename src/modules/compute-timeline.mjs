@@ -1,71 +1,68 @@
-const sanitizeRetryCount = (value) => {
-  if (value === Infinity) {
-    return Infinity;
-  }
-  const next = Number(value);
-  if (!Number.isFinite(next)) {
-    return 0;
-  }
-  return Math.max(0, Math.floor(next));
-};
+import { DEV } from 'solid-js';
+import z from "zod";
 
-const sanitizeTimeoutMs = (value) => {
-  if (value === Infinity) {
-    return Infinity;
-  }
-  const next = Number(value);
-  if (!Number.isFinite(next)) {
-    return 0;
-  }
-  return Math.max(0, next);
-};
 
-const sanitizeNonNegativeMs = (value) => {
-  const next = Number(value);
-  if (!Number.isFinite(next)) {
-    return 0;
-  }
-  return Math.max(0, next);
-};
+let timelineInputSchema;
 
-const sanitizeFactor = (value) => {
-  const next = Number(value);
-  if (!Number.isFinite(next) || next <= 0) {
-    return 1;
-  }
-  return next;
-};
+if (DEV) {
+  timelineInputSchema = z.object({
+    retryCount: z.union([z.number().nonnegative(), z.literal(Infinity)]),
+    responseTimeMs: z.number().nonnegative(),
+    initialDelayMs: z.number().positive(),
+    exponentialFactor: z.number().positive(),
+    maxDelayMs: z.number().positive(),
+    totalTimeoutMs: z.union([z.number().positive(), z.literal(Infinity)]),
+  })
+    .superRefine((value, ctx) => {
+      if (value.retryCount === Infinity && value.totalTimeoutMs === Infinity) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `Cannot be both 'retryCount' and 'totalTimeoutMs' Infinity`,
+        });
+      }
+    });
+}
 
-export default function computeTimeline(input = {}) {
-  const safeInput = {
-    retryCount: sanitizeRetryCount(input.retryCount),
-    responseTimeMs: sanitizeNonNegativeMs(input.responseTimeMs),
-    initialDelayMs: sanitizeNonNegativeMs(input.initialDelayMs),
-    exponentialFactor: sanitizeFactor(input.exponentialFactor),
-    maxDelayMs: sanitizeNonNegativeMs(input.maxDelayMs),
-    totalTimeoutMs: sanitizeTimeoutMs(input.totalTimeoutMs),
-  };
+export default function computeTimeline(input) {
+  console.log(input);
 
-  if (safeInput.retryCount === 0) {
-    return { timeline: [], totalRetries: 0, totalTimeMs: 0 };
+  if (!input) {
+    throw new Error("computeTimeline requires input values");
   }
 
-  const maxAttempts = Number.isFinite(safeInput.retryCount)
-    ? safeInput.retryCount
-    : Infinity;
-  const timeoutLimitMs = Number.isFinite(safeInput.totalTimeoutMs)
-    ? safeInput.totalTimeoutMs
-    : Infinity;
+  if (DEV) {
+    const res = timelineInputSchema.safeParse(input);
+    if (res.error) {
+      console.error(res.error);
+      return;
+    }
+  }
+
+  const {
+    retryCount,
+    responseTimeMs,
+    initialDelayMs,
+    exponentialFactor,
+    maxDelayMs,
+    totalTimeoutMs,
+  } = input;
 
   const timeline = [];
+
   let attempt = 0;
   let elapsedMs = 0;
+  let currentDelay = initialDelayMs / exponentialFactor;
+  let safetyLimit = false;
+
   const MAX_ITERATIONS = 1000;
+  const MAX_ELAPSED_MS = 4*3600*1000;
+
+  const maxAttempts = Math.min(retryCount + 1, MAX_ITERATIONS);
+  const timeLimitMs = Math.min(totalTimeoutMs, MAX_ELAPSED_MS);
 
   while (
     attempt < maxAttempts &&
-    elapsedMs <= timeoutLimitMs &&
-    attempt < MAX_ITERATIONS
+    elapsedMs <= timeLimitMs
   ) {
     attempt += 1;
     const entry = {
@@ -75,38 +72,35 @@ export default function computeTimeline(input = {}) {
     };
     timeline.push(entry);
 
-    elapsedMs += safeInput.responseTimeMs;
+    elapsedMs += responseTimeMs;
 
-    if (elapsedMs >= timeoutLimitMs) {
-      entry.delayAfterMs = 0;
+    if (elapsedMs >= timeLimitMs || attempt >= maxAttempts){
+      if (attempt >= MAX_ITERATIONS || elapsedMs >= MAX_ELAPSED_MS)
+        safetyLimit = true;
       break;
     }
 
-    if (attempt >= maxAttempts) {
-      entry.delayAfterMs = 0;
+    if (currentDelay < maxDelayMs)
+      currentDelay = Math.min(currentDelay * exponentialFactor, maxDelayMs);
+
+    if (elapsedMs + currentDelay > timeLimitMs) {
+      entry.delayAfterMs = Math.max(0, timeLimitMs - elapsedMs);
+      elapsedMs = timeLimitMs;
       break;
     }
 
-    const exponentialDelayMs = safeInput.initialDelayMs *
-      Math.pow(safeInput.exponentialFactor, attempt - 1);
-    const boundedDelayMs = Math.min(safeInput.maxDelayMs, exponentialDelayMs);
-    const finalDelayMs = Number.isFinite(boundedDelayMs)
-      ? Math.max(0, boundedDelayMs)
-      : safeInput.maxDelayMs;
+    entry.delayAfterMs = currentDelay;
+    elapsedMs += currentDelay;
 
-    if (elapsedMs + finalDelayMs > timeoutLimitMs) {
-      entry.delayAfterMs = Math.max(0, timeoutLimitMs - elapsedMs);
-      elapsedMs = timeoutLimitMs;
-      break;
-    }
-
-    entry.delayAfterMs = finalDelayMs;
-    elapsedMs += finalDelayMs;
+    if (elapsedMs >= MAX_ELAPSED_MS)
+      safetyLimit = true;
   }
 
   return {
+    responseTimeMs,
     timeline,
-    totalRetries: timeline.length,
-    totalTimeMs: Math.min(elapsedMs, timeoutLimitMs),
+    totalRetries: timeline.length - 1,
+    totalTimeMs: Math.min(elapsedMs, timeLimitMs),
+    safetyLimit,
   };
 }

@@ -9,9 +9,9 @@ export default function Home() {
   const [inputs, setInputs] = createSignal(defaultRetryInputs);
   const result = createMemo( () => computeTimeline(inputs()) );
 
-  const timeline = () => result().timeline;
-  const totalRetries = () => result().totalRetries;
-  const totalTimeMs = () => result().totalTimeMs;
+  const timeline = () => result().timeline ?? [];
+  const totalRetries = () => result().totalRetries ?? 0;
+  const totalTimeMs = () => result().totalTimeMs ?? 0;
 
   const LazyTimelineGraph = lazy( () => import("~/components/Chart") );
 

@@ -2,12 +2,12 @@ import { createEffect, createMemo, createSignal } from "solid-js";
 import { NumberInput } from "~/components/UI";
 
 export const defaultRetryInputs = {
-  retryCount: 8,
+  retryCount: 6,
   responseTimeMs: 50,
   initialDelayMs: 125,
   exponentialFactor: 2,
   maxDelayMs: 2000,
-  totalTimeoutMs: 30000,
+  totalTimeoutMs: 10000,
 };
 
 export default function RetryInputs(props) {
@@ -103,7 +103,7 @@ export default function RetryInputs(props) {
         <NumberInput
           title="Total timeout"
           unit="ms"
-          min="0"
+          min="1"
           allowInf
           value={value().totalTimeoutMs}
           onChange={handleChange("totalTimeoutMs")}

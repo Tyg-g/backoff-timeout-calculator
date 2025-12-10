@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 - SolidStart app using file-based routing in `src/routes/` (`index.jsx`, `[...404].jsx`). Add new routes as `.jsx` files; route names map to paths.
 - App shell lives in `src/app.jsx` (don't touch) with global styles in `src/app.css`. Client and server entrypoints are `src/entry-client.jsx` (don't touch) and `src/entry-server.jsx` (don't touch).
-- Reusable UI belongs in `src/components/` (currently empty). Keep middleware and HTTP headers in `src/middlewares.mjs`.
+- Reusable UI belongs in `src/components/` (RetryInputs form controls, NumberInput primitives in `UI.jsx`, chart visualization helpers, and the shared `Header.jsx`). Keep middleware and HTTP headers in `src/middlewares.mjs`.
 - Static assets go in `public/`; build output and Firebase deploy artifacts land in `.output/` (server functions + public assets per `firebase.json`).
 
 ## Build, Test, and Development Commands
@@ -17,6 +17,7 @@
 - Components use `PascalCase` filenames and exports; helpers and hooks use `camelCase`.
 - Route files are colocated under `src/routes/` and should default-export the page component.
 - Keep global CSS in `src/app.css`; prefer utility-first classes (Tailwind is available) for new styling, adding minimal custom rules when utilities fall short.
+- Use the shared Tailwind + DaisyUI stack from `src/app.css` and reuse primitives like `NumberInput`/`Navbar` in `src/components/UI.jsx` whenever possible to keep interactions consistent.
 
 ## Testing Guidelines
 - No automated test suite is present yet. When adding features, introduce colocated tests such as `feature.test.jsx` near the code (Vitest/Playwright are good fits).

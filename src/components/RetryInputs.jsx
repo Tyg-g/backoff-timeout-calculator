@@ -74,6 +74,7 @@ export default function RetryInputs(props) {
       <form className="mx-auto max-w-2xl grid grid-flow-col grid-rows-2 gap-x-5 gap-y-1 items-end ">
         <NumberInput
           title="Retry count"
+          name="retry-count"
           min="0"
           step="1"
           allowInf
@@ -86,7 +87,8 @@ export default function RetryInputs(props) {
         />
         <NumberInput
           title="Response time"
-          unit="ms"
+          name="response-time"
+          unit="s"
           min="0"
           step="50"
           value={value().responseTimeMs}
@@ -94,7 +96,8 @@ export default function RetryInputs(props) {
         />
         <NumberInput
           title="Initial delay"
-          unit="ms"
+          name="initial-delay"
+          unit="s"
           min="10"
           step="10"
           value={value().initialDelayMs}
@@ -102,6 +105,7 @@ export default function RetryInputs(props) {
         />
         <NumberInput
           title="Exponential factor"
+          name="exponential-factor"
           min="1"
           step="0.5"
           value={value().exponentialFactor}
@@ -109,7 +113,8 @@ export default function RetryInputs(props) {
         />
         <NumberInput
           title="Max delay"
-          unit="ms"
+          name="max-delay"
+          unit="s"
           min="10"
           step="1000"
           value={value().maxDelayMs}
@@ -117,6 +122,7 @@ export default function RetryInputs(props) {
         />
         <NumberInput
           title="Total timeout"
+          name="total-timeout"
           unit="s"
           min="1"
           step="10"

@@ -24,8 +24,6 @@ if (DEV) {
 }
 
 export default function computeTimeline(input) {
-  console.log(input);
-
   if (!input) {
     throw new Error("computeTimeline requires input values");
   }

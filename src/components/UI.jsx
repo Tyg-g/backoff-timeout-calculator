@@ -1,5 +1,6 @@
 import { createEffect, createSignal, splitProps } from "solid-js";
 
+
 export function Navbar(props) {
   return (
     <div className={`navbar ${props.className}`}>
@@ -144,7 +145,7 @@ export function NumberInput(props) {
 
   return (
     <fieldset className="fieldset">
-      <legend className="fieldset-legend pb-1 font-mono text-base-content/80">{specialProps.title}</legend>
+      <legend className="fieldset-legend pb-1 text-base-content/80">{specialProps.title}</legend>
 
         <div className={`input bg-transparent flex items-center gap-2 ${specialProps.allowInf ? "pr-0" : ""}`}>
           <input
@@ -156,12 +157,12 @@ export function NumberInput(props) {
             placeholder={ isInf() ? "Inf" : ""}
           />
           {specialProps.unit && (
-            <div className="unit font-mono text-base-content/50">{specialProps.unit}</div>
+            <div className="unit text-base-content/50">{specialProps.unit}</div>
           )}
           {specialProps.allowInf && (
             <button
               type="button"
-              className={`btn btn-soft btn-xs text-[.6em] h-full font-mono ${!isInf() ? "btn-active text-gray-500" : ""} shadow-none my-1`}
+              className={`btn btn-soft btn-xs text-[.6em] h-full ${!isInf() ? "btn-active text-gray-500" : ""} shadow-none my-1`}
               aria-pressed={isInf()}
               onClick={toggleInfinity}
             >
@@ -172,5 +173,56 @@ export function NumberInput(props) {
 
 
     </fieldset>
+  );
+}
+
+
+export function Skeleton(props){
+  const [specialProps, passProps] = splitProps(props, ['className']);
+
+  return (
+    <div className={`skeleton ${specialProps.className}`} {...passProps}></div>
+  );
+}
+
+
+export function Table(props){
+  return (
+    <table className="table table-zebra rounded-box border border-base-content/5 bg-base-100">
+
+      <thead>
+        <tr>
+          {props.header?.map((item, index) => (
+            <th key={index}>{item}</th>
+          ))}
+        </tr>
+      </thead>
+
+      <tbody>
+        {props.data?.map((row, index) => (
+          <tr key={index}>
+            {row.map((item, index) => (
+              <td key={index}>{item}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+
+    </table>
+  );
+}
+
+
+export function Toggle(props){
+  const [specialProps, passProps] = splitProps(props, [
+    "className",
+    "label"
+  ]);
+
+  return (
+    <label class="label">
+      <input type="checkbox" className={`toggle ${specialProps.className}`} {...passProps} />
+      {specialProps.label}
+    </label>
   );
 }

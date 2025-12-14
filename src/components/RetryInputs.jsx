@@ -2,12 +2,12 @@ import { createEffect, createMemo, createSignal } from "solid-js";
 import { NumberInput } from "~/components/UI";
 
 export const defaultRetryInputs = {
-  retryCount: 6,
-  responseTimeMs: 50,
+  retryCount: 10,
+  responseTimeMs: 25,
   initialDelayMs: 125,
   exponentialFactor: 2,
-  maxDelayMs: 2000,
-  totalTimeoutMs: 10000,
+  maxDelayMs: 5000,
+  totalTimeoutMs: Infinity,
 };
 
 export default function RetryInputs(props) {
@@ -87,8 +87,8 @@ export default function RetryInputs(props) {
         />
         <NumberInput
           title="Exponential factor"
-          min="0.1"
-          step="0.1"
+          min="1"
+          step="0.5"
           value={value().exponentialFactor}
           onChange={handleChange("exponentialFactor")}
         />

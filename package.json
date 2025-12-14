@@ -8,7 +8,8 @@
     "build": "vinxi build",
     "version": "vinxi version",
     "preview": "npx wrangler --cwd .output dev",
-    "deploy": "npx wrangler --cwd .output deploy"
+    "deploy": "npx wrangler --cwd .output deploy",
+    "favicons": "node src-img/gen-favicons.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",

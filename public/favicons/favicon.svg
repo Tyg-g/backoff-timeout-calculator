@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="i"
+     style="fill:#787c88;fill-opacity:1;stroke:none;">
+    <rect
+       id="r1"
+       width="48"
+       height="8"
+       x="20"
+       y="120" />
+    <rect
+       id="r2"
+       width="48"
+       height="8"
+       x="80"
+       y="120" />
+  </g>
+</svg>

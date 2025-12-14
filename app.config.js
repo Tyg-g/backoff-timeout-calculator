@@ -5,6 +5,9 @@ import tailwindcss from "@tailwindcss/vite";
 const appUrl = "https://backoff.so";
 const appTitle = "Backoff_Calculator";
 
+const hour = 3600;
+const day = 24*hour;
+
 
 const viteConfig = {
   define: {
@@ -40,6 +43,14 @@ export default defineConfig({
         headers: {
           "X-Frame-Options": "DENY",
           "X-Content-Type-Options": "nosniff",
+          "Strict-Transport-Security": `max-age=${day}; includeSubDomains`,
+          "Cross-Origin-Opener-Policy": "same-origin",
+          "Cross-Origin-Resource-Policy": "same-origin"
+        }
+      },
+      "/favicons/**": {
+        headers: {
+          "Cache-Control": `max-age=${10*day}, s-maxage=${day}, stale-while-revalidate=${hour}, must-revalidate`
         }
       }
     }

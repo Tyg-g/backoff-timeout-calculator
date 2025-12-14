@@ -23,12 +23,14 @@ const outputPath = 'favicons/';
 // ---------------------
 
 
-const origSvg = await fs.readFile("./favicon.svg", "utf8");
+const origSvg = await fs.readFile("./src-img/favicon.svg", "utf8");
 
-Object.entries(themes).forEach(([theme, color]) => processSvg(origSvg, theme, color));
+for (const [theme, color] of Object.entries(themes)) {
+  await processSvg(origSvg, theme, color);
+}
 
 
-function processSvg(svg, theme, color) {
+async function processSvg(svg, theme, color) {
 
   if (theme) {
     svg = svg.replace(
@@ -46,13 +48,14 @@ function processSvg(svg, theme, color) {
     filename: `${baseName}${spec(size)}${spec(theme)}.${type}`
   }));
 
-  fileSpecs.forEach((spec) => writeFile(spec, svg));
-  fileSpecs.forEach((spec) => printTag(spec));
-
+  for (const spec of fileSpecs) {
+    await writeFile(spec, svg);
+    printTag(spec);
+  }
 }
 
 
-function writeFile(spec, svg) {
+async function writeFile(spec, svg) {
   const { type, size, filename } = spec;
   const dirPath = `${outputDir}${outputPath}`;
   const filePath = `${dirPath}${filename}`;
@@ -83,5 +86,5 @@ function printTag(spec) {
   const sizesStr = size ? `sizes="${size}x${size}"` : '';
   const media = theme ? `media="(prefers-color-scheme: ${theme})"` : '';
 
-  console.log(`<link rel="icon" type="image/${type}" href="/${outputPath}${filename}" ${sizesStr} ${media}>`);
+  console.log(`<Link rel="icon" type="image/${type}" href="/${outputPath}${filename}" ${sizesStr} ${media} />`);
 }

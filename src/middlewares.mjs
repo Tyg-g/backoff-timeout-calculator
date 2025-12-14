@@ -27,6 +27,6 @@ function addHeaders(hdrs){
   hdrs.set("X-Frame-Options", "DENY");
   hdrs.set("Strict-Transport-Security", `max-age=${day}; includeSubDomains`);
   hdrs.set("Cross-Origin-Opener-Policy", "same-origin");
-  //hdrs.set("Cross-Origin-Resource-Policy", "same-origin");
+  hdrs.set("Cross-Origin-Resource-Policy", "same-origin");
   hdrs.set("X-Content-Type-Options", "nosniff");
 }

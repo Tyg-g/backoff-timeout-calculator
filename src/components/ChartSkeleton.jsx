@@ -4,17 +4,17 @@ import { Skeleton } from "~/components/UI";
 
 
 export default function ChartSkeleton(props){
-  const ticks = 8;
+  const ticks = 7;
 
   return (
-    <div className={`chart-skeleton flex flex-col gap-2 px-6 ${props.className}`}>
+    <div className={`chart-skeleton h-full flex flex-col gap-2 px-6 pt-6 pb-2 ${props.className}`}>
 
       <div className='flex h-2 gap-2 justify-between'>
         <Skeleton className='w-20 h-1'/>
         <Skeleton className='w-40'/>
       </div>
 
-      <Skeleton className='h-full min-h-8'>
+      <Skeleton className='h-full grow min-h-8'>
         <div className='grid-mock flex h-max mx-3 my-6'>
           <For each={Array(ticks-1)}>
             {() => <div className='grow h-10'/>}

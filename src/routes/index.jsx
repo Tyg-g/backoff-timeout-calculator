@@ -1,5 +1,5 @@
-import { Title } from "@solidjs/meta";
-import { For, Show, createMemo, createSignal, createEffect, lazy } from "solid-js";
+import { clientOnly } from "@solidjs/start";
+import { For, Show, createMemo, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 
 import RetryInputs, { defaultRetryInputs } from "~/components/RetryInputs";
@@ -18,19 +18,15 @@ export default function CalculatorPage() {
   const totalTimeMs = () => result().totalTimeMs ?? 0;
   const stopReasonRetries = () => totalRetries() >= inputs().retryCount;
 
-  const [shows, setShows] = createStore({ table: false, bargraph: true });
+  const [shows, setShows] = createStore({ table: false, bargraph: false });
 
-  const LazyTimelineGraph = lazy( () => import("~/components/TimelineChart") );
-  const LazyBarGraph =      lazy( () => import("~/components/BarGraph") );
+  const LazyTimelineGraph = clientOnly( () => import("~/components/TimelineChart") );
+  const LazyBarGraph =      clientOnly( () => import("~/components/BarGraph") );
 
-  createEffect(() => {
-    //console.log(inputs().retires);
-  });
 
   return (
     <main>
       <RetryInputs value={inputs()} onChange={setInputs} />
-      <ChartSkeleton />
       <output className='block px-2 w-170 my-10 mx-auto text-sm'>
         <div className='text-gray-300 mb-2 mr-8 inline-block'>
           Retry count:
@@ -44,9 +40,9 @@ export default function CalculatorPage() {
         </div>
       </output>
       <div className='h-50 my-10 mx-1'>
-        <LazyTimelineGraph data={result()}/>
+        <LazyTimelineGraph data={result()} />
       </div>
-      <div className='px-4 text-xs flex gap-4'>
+      {/* <div className='px-4 text-xs flex gap-4'>
         <Toggle label='Table' className='toggle-xs' checked={shows.table} onChange={(e) => setShows('table', e.target.checked)} />
         <Toggle label='Bargraph' className='toggle-xs' checked={shows.bargraph} onChange={(e) => setShows('bargraph', e.target.checked)} />
       </div>
@@ -63,7 +59,7 @@ export default function CalculatorPage() {
         <Show when={shows.bargraph}>
           <LazyBarGraph data={result()} />
         </Show>
-      </output>
+      </output>*/}
 
     </main>
   );

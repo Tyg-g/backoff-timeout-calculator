@@ -24,7 +24,9 @@ export default function RetryInputs(props) {
 
   const emitChange = (nextValue) => {
     if (typeof props.onChange === "function") {
-      props.onChange(nextValue);
+      if (isFinite(nextValue.totalTimeoutMs) || isFinite(nextValue.retryCount)) {
+        props.onChange(nextValue);
+      }
     }
   };
 
@@ -41,11 +43,9 @@ export default function RetryInputs(props) {
 
     if (nextValue === Infinity) {
       if (key === "retryCount" && current.totalTimeoutMs === Infinity) {
-        totalTimeoutControl?.clearInfinity(defaultRetryInputs.totalTimeoutMs);
-        nextState.totalTimeoutMs = defaultRetryInputs.totalTimeoutMs;
+        totalTimeoutControl?.clearInfinity();
       } else if (key === "totalTimeoutMs" && current.retryCount === Infinity) {
-        retryCountControl?.clearInfinity(defaultRetryInputs.retryCount);
-        nextState.retryCount = defaultRetryInputs.retryCount;
+        retryCountControl?.clearInfinity();
       }
     }
 
@@ -63,6 +63,7 @@ export default function RetryInputs(props) {
           min="0"
           step="1"
           allowInf
+          initialFinite={10}
           value={value().retryCount}
           onChange={handleChange("retryCount")}
           ref={(api) => {
@@ -105,6 +106,7 @@ export default function RetryInputs(props) {
           unit="ms"
           min="1"
           allowInf
+          initialFinite={30000}
           value={value().totalTimeoutMs}
           onChange={handleChange("totalTimeoutMs")}
           ref={(api) => {

@@ -1,7 +1,8 @@
 import { onMount } from 'solid-js';
+import { isServer } from "solid-js/web";
 
 import { Bar } from 'solid-chartjs';
-import { Chart, Title, Tooltip, Legend, Colors} from 'chart.js';
+import { Chart, Title, Tooltip, Legend, Colors, LinearScale, CategoryScale, BarElement } from 'chart.js';
 
 
 const targetTicks = 12;
@@ -9,14 +10,16 @@ const targetTicks = 12;
 
 export default function TimelineChart(props) {
   onMount(() => {
+    if (isServer) return;
+
     Tooltip.positioners.centerTop = centerTopPositioner;
-    Chart.register(Title, Tooltip, Legend, Colors, cornerLabelsPluginGen(), overlayTitlePluginGen());
     Chart.defaults.font.family = 'IBM Plex Mono';
     Chart.defaults.font.size = 10;
     //Chart.defaults.color = "#777";
     Chart.defaults.responsive = true;
     Chart.defaults.maintainAspectRatio = false;
     Chart.defaults.animation = false;
+    Chart.register(Title, Tooltip, Legend, Colors, LinearScale, CategoryScale, BarElement, cornerLabelsPluginGen(), overlayTitlePluginGen());
 
   })
 
@@ -97,7 +100,7 @@ export default function TimelineChart(props) {
         display: false,
       },
       xTop: {
-        type: 'linear',
+        //type: 'line',
         position: 'top',
         ticks: { display: false },
         grid: {
@@ -217,7 +220,7 @@ function overlayTitlePluginGen() {
         const weight = opts?.font?.weight ?? baseFont.weight ?? "normal";
         const size = opts?.font?.size ?? baseFont.size ?? 12;
         const style = opts?.font?.style ?? baseFont.style ?? "normal";
-        const family = opts?.font?.family ?? baseFont.family ?? "sans-serif";
+        const family = opts?.font?.family ?? baseFont.family ?? "monospace";
 
         ctx.font = `${style} ${weight} ${size}px ${family}`;
       }
@@ -254,7 +257,7 @@ function cornerLabelsPluginGen() {
       ctx.save();
       ctx.fillStyle = color;
       ctx.textBaseline = 'top';
-      ctx.font = `${fontSize}px ${Chart.defaults.font.family || 'sans-serif'}`;
+      ctx.font = `${fontSize}px ${Chart.defaults.font.family || 'monospace'}`;
 
       ctx.textAlign = 'left';
       ctx.fillText(startText, left + offsetX, top + offsetY);

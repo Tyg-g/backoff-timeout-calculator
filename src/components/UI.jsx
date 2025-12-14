@@ -3,9 +3,9 @@ import { createEffect, createSignal, splitProps } from "solid-js";
 
 export function Navbar(props) {
   return (
-    <div className={`navbar ${props.className}`}>
+    <header className={`navbar ${props.className}`}>
       {props.children}
-    </div>
+    </header>
   );
 }
 
@@ -20,17 +20,11 @@ const parseAttrNumber = (value) => {
 
 export function NumberInput(props) {
   const [specialProps, inputProps] = splitProps(props, [
-    "unit",
-    "title",
-    "allowInf",
-    "value",
-    "onChange",
-    "ref",
-    "onInput",
+    "unit", "title", "allowInf", "value", "onChange", "ref", "onInput", "initialFinite"
   ]);
 
   const [inputValue, setInputValue] = createSignal("");
-  const [lastFiniteValue, setLastFiniteValue] = createSignal();
+  const [lastFiniteValue, setLastFiniteValue] = createSignal(specialProps.initialFinite);
   const [isInf, setIsInf] = createSignal(false);
 
   const emitChange = (nextValue) => {
@@ -115,20 +109,7 @@ export function NumberInput(props) {
   });
 
   const controlApi = {
-    clearInfinity: (fallbackValue) => {
-      if (Number.isFinite(fallbackValue)) {
-        commitFiniteValue(fallbackValue);
-        return;
-      }
-      const previous = lastFiniteValue();
-      if (previous === undefined) {
-        setIsInf(false);
-        setInputValue("");
-        emitNaN();
-        return;
-      }
-      commitFiniteValue(previous);
-    },
+    clearInfinity: () => (console.log('clear inf'),toggleInfinity()),
     isInfinity: () => isInf(),
   };
 

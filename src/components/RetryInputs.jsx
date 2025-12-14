@@ -24,7 +24,7 @@ export default function RetryInputs(props) {
 
   const emitChange = (nextValue) => {
     if (typeof props.onChange === "function") {
-      if (isFinite(nextValue.totalTimeoutMs) || isFinite(nextValue.retryCount)) {
+      if (Number.isFinite(nextValue.totalTimeoutMs) || Number.isFinite(nextValue.retryCount)) {
         props.onChange(nextValue);
       }
     }
@@ -33,21 +33,31 @@ export default function RetryInputs(props) {
   let retryCountControl;
   let totalTimeoutControl;
 
+  const resolveInfinityConflict = (key, nextValue) => {
+    if (nextValue !== Infinity) {
+      return;
+    }
+
+    const snapshot = inputs();
+    if (key === "retryCount" && snapshot.totalTimeoutMs === Infinity) {
+      totalTimeoutControl?.clearInfinity();
+      return;
+    }
+
+    if (key === "totalTimeoutMs" && snapshot.retryCount === Infinity) {
+      retryCountControl?.clearInfinity();
+      return;
+    }
+  };
+
   const handleChange = (key) => (nextValue) => {
     if (Number.isNaN(nextValue)) {
       return;
     }
 
-    const current = inputs();
-    const nextState = { ...current, [key]: nextValue };
+    resolveInfinityConflict(key, nextValue);
 
-    if (nextValue === Infinity) {
-      if (key === "retryCount" && current.totalTimeoutMs === Infinity) {
-        totalTimeoutControl?.clearInfinity();
-      } else if (key === "totalTimeoutMs" && current.retryCount === Infinity) {
-        retryCountControl?.clearInfinity();
-      }
-    }
+    const nextState = { ...inputs(), [key]: nextValue };
 
     setInputs(nextState);
     emitChange(nextState);

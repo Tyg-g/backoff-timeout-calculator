@@ -109,7 +109,11 @@ export function NumberInput(props) {
   });
 
   const controlApi = {
-    clearInfinity: () => (console.log('clear inf'),toggleInfinity()),
+    clearInfinity: () => {
+      if (isInf()) {
+        toggleInfinity();
+      }
+    },
     isInfinity: () => isInf(),
   };
 

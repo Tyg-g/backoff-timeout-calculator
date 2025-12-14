@@ -17,6 +17,8 @@ export default function RetryInputs(props) {
   }));
 
   const [inputs, setInputs] = createSignal(mergedValue());
+  const toSeconds = (value) => (Number.isFinite(value) ? value / 1000 : value);
+  const toMilliseconds = (value) => (Number.isFinite(value) ? value * 1000 : value);
 
   createEffect(() => {
     setInputs(mergedValue());
@@ -57,7 +59,9 @@ export default function RetryInputs(props) {
 
     resolveInfinityConflict(key, nextValue);
 
-    const nextState = { ...inputs(), [key]: nextValue };
+    const normalizedValue = key === "totalTimeoutMs" ? toMilliseconds(nextValue) : nextValue;
+
+    const nextState = { ...inputs(), [key]: normalizedValue };
 
     setInputs(nextState);
     emitChange(nextState);
@@ -113,11 +117,12 @@ export default function RetryInputs(props) {
         />
         <NumberInput
           title="Total timeout"
-          unit="ms"
+          unit="s"
           min="1"
+          step="10"
           allowInf
-          initialFinite={30000}
-          value={value().totalTimeoutMs}
+          initialFinite={30}
+          value={toSeconds(value().totalTimeoutMs)}
           onChange={handleChange("totalTimeoutMs")}
           ref={(api) => {
             totalTimeoutControl = api;

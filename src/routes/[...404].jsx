@@ -6,7 +6,7 @@ export default function NotFound() {
   return (<>
     <HttpStatusCode code={404} />
     <Meta name="robots" content="noindex,nofollow" />
-    <HttpHeader name="Cache-Control" value="public, max-age=0, s-maxage=60" />
+    <HttpHeader name="Cache-Control" value="public, max-age=60, s-maxage=3600" />
     <HttpHeader name="X-Robots-Tag" value="noindex, nofollow" />
 
     <style> {`

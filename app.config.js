@@ -1,8 +1,8 @@
 import { defineConfig } from "@solidjs/start/config";
 import tailwindcss from "@tailwindcss/vite";
 
-
-const appUrl = "https://backoff.so";
+const appDomain = "backoff.so";
+const appUrl = `https://${appDomain}`;
 const appTitle = "Backoff_Calculator";
 
 const hour = 3600;
@@ -36,7 +36,11 @@ export default defineConfig({
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
-      wrangler: { name: 'backoff-ssr-server' }
+      wrangler: {
+        name: 'backoff-ssr-server',
+        routes: [ { pattern: appDomain, custom_domain: true } ],
+        workers_dev: false,
+      }
     },
     routeRules: {
       "/**": {

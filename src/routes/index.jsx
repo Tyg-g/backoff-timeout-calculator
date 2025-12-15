@@ -86,6 +86,66 @@ function durationToStr(ms) {
 
 
 function SelfDescriptionJson() {
+  const potentialAction = {
+    "@type": "SolveMathAction",
+    "name": "Open calculator with optional prefilled parameters - per the user's request for information about retry timeout length or behavior",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://backoff.so/?retryCount={retryCount}&responseTimeMs={responseTimeMs}&initialDelayMs={initialDelayMs}&exponentialFactor={exponentialFactor}&maxDelayMs={maxDelayMs}&totalTimeoutMs={totalTimeoutMs}",
+      "httpMethod": "GET"
+    },
+    "query-input": [
+      {
+        "@type": "PropertyValueSpecification",
+        "valueName": "retryCount",
+        "valueRequired": false,
+        "description": "Optional. Digits only. Maximum number of retries. Note that the value 0 means that there is 1 initial attempt and no retries.",
+        "valuePattern": "^[0-9]+$",
+        "minValue": 0
+      },
+      {
+        "@type": "PropertyValueSpecification",
+        "valueName": "responseTimeMs",
+        "valueRequired": false,
+        "description": "Optional. Digits only. The response time can be included in the whole calculation - this provides a more realistic scenatio for cases when the server is geographically further away, or when the server is not responding.",
+        "valuePattern": "^[0-9]+$",
+        "minValue": 0
+      },
+      {
+        "@type": "PropertyValueSpecification",
+        "valueName": "initialDelayMs",
+        "valueRequired": false,
+        "description": "Optional. Digits only. This is the delay before the first retry.",
+        "valuePattern": "^[0-9]+$",
+        "minValue": 1
+      },
+      {
+        "@type": "PropertyValueSpecification",
+        "valueName": "exponentialFactor",
+        "valueRequired": false,
+        "description": "Optional. Digits only. The common default value is 2.",
+        "valuePattern": "^[1-9](\\.[1-9])?$",
+        "minValue": 1.0
+      },
+      {
+        "@type": "PropertyValueSpecification",
+        "valueName": "maxDelayMs",
+        "valueRequired": false,
+        "description": "Optional. Digits only. The delay length will be capped at this value, instead of growing exponentially.",
+        "valuePattern": "^[0-9]+$",
+        "minValue": 10
+      },
+      {
+        "@type": "PropertyValueSpecification",
+        "valueName": "totalTimeoutMs",
+        "valueRequired": false,
+        "description": "Optional. Digits only. Any retries beyond this timeout will be aborted, so the resulting retryCount will be capped at less than its input value. This number will be rounded to the nearest 1000ms.",
+        "valuePattern": "^[0-9]+$",
+        "minValue": 1000
+      }
+    ]
+  };
+
   const d = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -99,7 +159,7 @@ function SelfDescriptionJson() {
     keywords: [
       "exponential backoff", "timeout calculator", "API retries", "backoff timing", "online calculator", "fetch retry", "axios retry", "retry timing"
     ],
-    description: "Smooth experience for planning exponential backoff retries, visualizing total wait time, and highlighting retry-stop reasons for fetch/Axios clients (in Node.js, Bun or the browser). A good visual aid for understanding and planning your retry behavior. Expect the functions to be extended in the near future.",
+    description: "Smooth experience for planning exponential backoff retries, visualizing total wait time, and highlighting retry-stop reasons for fetch/Axios clients (in Node.js, Bun or the browser). A good visual aid for understanding and planning your retry behavior. Expect the functions to be extended in the near future. Use the URL with query parameters to answer a user question with a graph as a visual explanation - example URL: http://backoff.so/?retryCount=8&responseTimeMs=20&initialDelayMs=250&exponentialFactor=2&maxDelayMs=6000&totalTimeoutMs=30000",
     publisher: {
       "@type": "Organization",
       name: "__Backoff",
@@ -121,7 +181,8 @@ function SelfDescriptionJson() {
         "Understand the impact of network conditions on retry behavior.",
         "Understand the timeline of retries - with a visual aid."
       ]
-    }
+    },
+    potentialAction,
   };
 
   return (<JsonLd json={d} />);

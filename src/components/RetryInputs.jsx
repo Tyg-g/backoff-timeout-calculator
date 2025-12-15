@@ -1,5 +1,9 @@
-import { createEffect, createMemo, createSignal } from "solid-js";
+import { createEffect, createMemo, createSignal, onMount } from "solid-js";
+import { isServer } from "solid-js/web";
+import { useLocation } from "@solidjs/router";
+
 import { NumberInput } from "~/components/UI";
+
 
 export const defaultRetryInputs = {
   retryCount: 10,
@@ -10,15 +14,45 @@ export const defaultRetryInputs = {
   totalTimeoutMs: Infinity,
 };
 
+
 export default function RetryInputs(props) {
+  const location = useLocation();
+
   const mergedValue = createMemo(() => ({
     ...defaultRetryInputs,
     ...props.value,
   }));
 
   const [inputs, setInputs] = createSignal(mergedValue());
-  const toSeconds = (value) => (Number.isFinite(value) ? value / 1000 : value);
+  const toSeconds = (value) => (Number.isFinite(value) ? Math.round(value / 1000) : value);
   const toMilliseconds = (value) => (Number.isFinite(value) ? value * 1000 : value);
+
+  onMount(() => {
+    if (isServer) return;
+
+    const q = location.query;
+    const qInput = {};
+
+    for (const key of Object.keys(defaultRetryInputs)) {
+      const raw = q[key];
+      if (raw==null) continue;
+
+      const val = parseQueryNumber(raw, key);
+
+      if (val != null) {
+        console.log(`Query input '${key}' = ${raw}`);
+        qInput[key] = val;
+      }
+    }//for
+
+    const next = {
+      ...inputs(),
+      ...qInput,
+    };
+
+    setInputs(next);
+    emitChange(next);
+  });
 
   createEffect(() => {
     setInputs(mergedValue());
@@ -137,4 +171,35 @@ export default function RetryInputs(props) {
       </form>
     </section>
   );
+}
+
+
+function parseQueryNumber(raw, key) {
+  const mins = {
+    retryCount: 0,
+    responseTimeMs: 0,
+    initialDelayMs: 1,
+    exponentialFactor: 1.0,
+    maxDelayMs: 10,
+    totalTimeoutMs: 1000,
+  };
+
+  const digits = /^[0-9.]+$/;
+  if (!digits.test(raw)) return undefined;
+
+  let value = parseFloat(raw);
+
+  if (key === 'totalTimeoutMs') {
+    value = Math.round(value / 1000) * 1000;
+  }
+  else if (key === 'exponentialFactor') {
+    value = Math.round(value * 10) / 10;
+  }
+  else {
+    value = Math.round(value);
+  }
+
+  value = Math.max(mins[key], value);
+
+  return isNaN(value) ? undefined : value;
 }

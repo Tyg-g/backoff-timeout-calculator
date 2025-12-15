@@ -1,10 +1,9 @@
-import { DEV } from 'solid-js';
 import z from "zod";
 
 
 let timelineInputSchema;
 
-if (DEV) {
+if (import.meta.env.DEV) {
   timelineInputSchema = z.object({
     retryCount: z.union([z.number().nonnegative(), z.literal(Infinity)]),
     responseTimeMs: z.number().nonnegative(),
@@ -28,7 +27,7 @@ export default function computeTimeline(input) {
     throw new Error("computeTimeline requires input values");
   }
 
-  if (DEV) {
+  if (import.meta.env.DEV) {
     const res = timelineInputSchema.safeParse(input);
     if (res.error) {
       console.error(res.error);
@@ -49,7 +48,7 @@ export default function computeTimeline(input) {
 
   let attempt = 0;
   let elapsedMs = 0;
-  let currentDelay = initialDelayMs / exponentialFactor;
+  let currentDelay = Math.round(initialDelayMs / exponentialFactor);
   let safetyLimit = false;
 
   const MAX_ITERATIONS = 1000;
@@ -79,7 +78,7 @@ export default function computeTimeline(input) {
     }
 
     if (currentDelay < maxDelayMs)
-      currentDelay = Math.min(currentDelay * exponentialFactor, maxDelayMs);
+      currentDelay =  Math.round(Math.min(currentDelay * exponentialFactor, maxDelayMs));
 
     if (elapsedMs + currentDelay > timeLimitMs) {
       entry.delayAfterMs = Math.max(0, timeLimitMs - elapsedMs);

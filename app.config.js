@@ -33,6 +33,7 @@ export default defineConfig({
   server: {
     preset: "cloudflare_module",
     compatibilityDate: "2025-12-10",
+    prerender: { routes: ["/"] },
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
@@ -40,6 +41,7 @@ export default defineConfig({
         name: 'backoff-ssr-server',
         routes: [ { pattern: appDomain, custom_domain: true } ],
         workers_dev: false,
+        observability: { enabled: true }
       }
     },
     routeRules: {

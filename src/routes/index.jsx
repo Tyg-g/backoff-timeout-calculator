@@ -1,5 +1,5 @@
 import { For, Show, createMemo, createSignal } from "solid-js";
-import { Meta } from "@solidjs/meta";
+import { Meta, Link } from "@solidjs/meta";
 import { clientOnly, HttpHeader } from "@solidjs/start";
 import { createStore } from "solid-js/store";
 
@@ -28,6 +28,7 @@ export default function CalculatorPage() {
   return (<>
     <Meta name="robots" content="index,follow" />
     <HttpHeader name="X-Robots-Tag" value="index, follow" />
+    <Link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
     <SelfDescriptionJson />
 
     <main>
@@ -183,6 +184,14 @@ function SelfDescriptionJson() {
       ]
     },
     potentialAction,
+    subjectOf: {
+      "@type": "DigitalDocument",
+      "@id": "https://backoff.so/llms.txt#doc",
+      "url": "https://backoff.so/llms.txt",
+      "name": "llms.txt",
+      "encodingFormat": "text/plain",
+      "description": "LLM-friendly site usage notes, key links, information, and resources."
+    }
   };
 
   return (<JsonLd json={d} />);

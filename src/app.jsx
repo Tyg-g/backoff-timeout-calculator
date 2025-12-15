@@ -16,10 +16,10 @@ function RootLayout(props) {
   return (
     <MetaProvider>
 
-      <Title>{__APP_TITLE__}</Title>
+      <Title>Backoff Calculator - Capped Exponential Backoff</Title>
       <Link rel="canonical" href={canonicalUrl} />
 
-      <Meta name="description" content="Calculate the total backoff time; See how your exponential backoff works; -- For: fetch, axios -- In: Node.js, Bun, browsers accessing REST APIs." />
+      <Meta name="description" content="Calculate the total backoff time; Understand how your exponential backoff works; See backoff timing visualization. \n For fetch/axios backoff timing - used in Node.js, Bun, browsers accessing REST APIs." />
       <Meta name="keywords" content="exponential, retry, backoff, timing, timeout, calculator, online, fetch, axios, node.js, bun, browser, rest, api" />
 
       <LinkFavicons />
@@ -81,6 +81,7 @@ function LinkFavicons() {
 
       <Link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
       <Link rel="icon" type="image/png" href="/icons/favicon-32.png" sizes="32x32"  />
+      <Link rel="icon" href="/favicon.ico" sizes="16x16,32x32,64x64"  />
     </>
   );
 }

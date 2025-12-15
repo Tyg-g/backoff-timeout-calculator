@@ -26,7 +26,7 @@
     "tailwindcss": "^4.1.17",
     "vinxi": "^0.5.7",
     "wrangler": "^4.54.0",
-    "zod": "^4.1.13"
+    "zod": "^4.2.0"
   },
   "engines": {
     "node": ">=22"

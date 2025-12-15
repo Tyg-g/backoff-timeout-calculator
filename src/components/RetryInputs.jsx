@@ -88,7 +88,7 @@ export default function RetryInputs(props) {
         <NumberInput
           title="Response time"
           name="response-time"
-          unit="s"
+          unit="ms"
           min="0"
           step="50"
           value={value().responseTimeMs}
@@ -97,7 +97,7 @@ export default function RetryInputs(props) {
         <NumberInput
           title="Initial delay"
           name="initial-delay"
-          unit="s"
+          unit="ms"
           min="10"
           step="10"
           value={value().initialDelayMs}
@@ -114,7 +114,7 @@ export default function RetryInputs(props) {
         <NumberInput
           title="Max delay"
           name="max-delay"
-          unit="s"
+          unit="ms"
           min="10"
           step="1000"
           value={value().maxDelayMs}

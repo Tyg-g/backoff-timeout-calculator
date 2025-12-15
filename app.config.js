@@ -48,9 +48,14 @@ export default defineConfig({
           "Cross-Origin-Resource-Policy": "same-origin"
         }
       },
-      "/favicons/**": {
+      "/icons/**": {
         headers: {
-          "Cache-Control": `max-age=${10*day}, s-maxage=${day}, stale-while-revalidate=${hour}, must-revalidate`
+          "Cache-Control": `max-age=${10*day}, s-maxage=${day}, stale-while-revalidate=${day}, must-revalidate`
+        }
+      },
+      "/*.*": {
+        headers: {
+          "Cache-Control": `max-age=${day}, s-maxage=${day}, must-revalidate`
         }
       }
     }

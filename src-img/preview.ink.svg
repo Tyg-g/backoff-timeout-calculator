@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1200"
+   height="630"
+   viewBox="0 0 1200 630"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   sodipodi:docname="preview.ink.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="0.63111224"
+     inkscape:cx="602.90385"
+     inkscape:cy="327.99237"
+     inkscape:current-layer="layer1"
+     showgrid="true">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="75"
+       spacingy="75"
+       empcolor="#0099e5"
+       empopacity="0.14509804"
+       color="#0099e5"
+       opacity="0.09803922"
+       empspacing="2"
+       enabled="true"
+       visible="true"
+       dotted="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#0a0a0c;fill-opacity:1;stroke:#40aa8c;stroke-width:0.1;stroke-opacity:0.449027"
+       id="rect1"
+       width="1199.9501"
+       height="630"
+       x="7.1120521e-05"
+       y="0.050000001" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:98.4375px;font-family:'IBM Plex Mono';-inkscape-font-specification:'IBM Plex Mono, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;letter-spacing:1.96875px;word-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#eceffb;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-opacity:0.449027"
+       x="669.91309"
+       y="322.97424"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         x="669.91309"
+         y="322.97424"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:98.4375px;font-family:'IBM Plex Mono';-inkscape-font-specification:'IBM Plex Mono, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#eceffb;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none">__Backoff</tspan></text>
+  </g>
+</svg>

@@ -9,7 +9,7 @@
     "version": "vinxi version",
     "preview": "npx wrangler --cwd .output dev",
     "deploy": "npx wrangler --cwd .output deploy",
-    "favicons": "node src-img/gen-favicons.mjs"
+    "gen-icons": "node src-img/gen-icons.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",

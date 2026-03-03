@@ -32,3 +32,36 @@ body {
 legend {
   letter-spacing: .03em;
 }
+
+footer {
+  @apply bg-base-200 text-xs px-2 text-base-content/10 gap-x-5;
+  display: flex;
+  justify-content: space-between;
+  padding-block : .14rem;
+  flex-wrap: wrap;
+
+  a {
+    @apply text-base-content/12 hover:text-base-content/22;
+  }
+}
+
+.feedback {
+  h2 {
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    margin-bottom: 1.5rem;
+  }
+
+  p {
+    margin-block: 1rem;
+  }
+
+  .fb-cta {
+    margin-block: 2.5rem;
+  }
+
+  .btn {
+    margin-block: .95rem;
+  }
+}

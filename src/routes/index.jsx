@@ -26,7 +26,7 @@ export default function CalculatorPage() {
 
 
   return (<>
-    <Meta name="robots" content="index,follow" />
+    <Meta name="robots" content="index, follow" />
     <HttpHeader name="X-Robots-Tag" value="index, follow" />
     <Link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
     <JsonSelfDescription />

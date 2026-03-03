@@ -33,7 +33,7 @@ export default defineConfig({
   server: {
     preset: "cloudflare_module",
     compatibilityDate: "2025-12-10",
-    prerender: { routes: ["/"] },
+    prerender: { routes: ['/', '/feedback'] },
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,

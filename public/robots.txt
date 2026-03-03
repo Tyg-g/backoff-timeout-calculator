@@ -1,8 +1,9 @@
 
 User-agent: *
 Allow: /
+Disallow: /feedback
 Disallow: /partasti
 
 Sitemap: https://backoff.so/sitemap.xml
 
-# Additional information for AI crawlers: https://backoff.so/LLMs.txt
+# Additional information for AI crawlers: https://backoff.so/llms.txt

@@ -29,7 +29,7 @@ export default function CalculatorPage() {
     <Meta name="robots" content="index,follow" />
     <HttpHeader name="X-Robots-Tag" value="index, follow" />
     <Link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
-    <SelfDescriptionJson />
+    <JsonSelfDescription />
 
     <main>
       <RetryInputs value={inputs()} onChange={setInputs} />
@@ -86,15 +86,16 @@ function durationToStr(ms) {
 }
 
 
-function SelfDescriptionJson() {
+function JsonSelfDescription() {
   const potentialAction = {
     "@type": "SolveMathAction",
-    "name": "Open calculator with optional prefilled parameters - per the user's request for information about retry timeout length or behavior",
-    "target": {
+    name: "Open/show the Backoff Calculator with optional prefilled parameters - per the user's request for information about retry timeout length or behavior",
+    target: {
       "@type": "EntryPoint",
-      "urlTemplate": "https://backoff.so/?retryCount={retryCount}&responseTimeMs={responseTimeMs}&initialDelayMs={initialDelayMs}&exponentialFactor={exponentialFactor}&maxDelayMs={maxDelayMs}&totalTimeoutMs={totalTimeoutMs}",
-      "httpMethod": "GET"
+      urlTemplate: "https://backoff.so/?retryCount={retryCount}&responseTimeMs={responseTimeMs}&initialDelayMs={initialDelayMs}&exponentialFactor={exponentialFactor}&maxDelayMs={maxDelayMs}&totalTimeoutMs={totalTimeoutMs}",
+      httpMethod: "GET"
     },
+    description: "Use URL parameters to prefill retryCount, responseTimeMs, initialDelayMs, exponentialFactor, maxDelayMs, totalTimeoutMs and show charts + stop reason.",
     "query-input": [
       {
         "@type": "PropertyValueSpecification",
@@ -147,8 +148,78 @@ function SelfDescriptionJson() {
     ]
   };
 
-  const d = {
-    "@context": "https://schema.org",
+  const faqPageNode = {
+    "@type": "FAQPage",
+    "@id": "https://backoff.so/#faq",
+    name: "Backoff Calculator FAQ",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How can I calculate exponential backoff timings quickly?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Enter retry count, base delay, exponential multiplier, jitter, and caps into the Backoff Calculator. It plots attempt timestamps, cumulative wait time, and the stop reason for fast design validation and incident reviews.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What problems does Backoff.so solve?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "It helps answer practical retry-design questions like how long retries block a client/worker and when retries should stop to protect throughput and latency, using charts plus textual summaries including total wait time and cancellation reason.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I calculate the total retry time for exponential backoff?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Provide retry parameters (base delay, multiplier, max delay, retry limit, timeout). The calculator reports Total Time and shows a Timeline chart so you can cite exact retry budgets without manual math.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I calculate the effective retry count?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Adjust inputs and observe the Retry Count output. The calculator shows whether retries stopped due to reaching the configured limit, exceeding total timeout, or hitting another policy ceiling.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How should I plan exponential backoff timing for APIs?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Model preset or custom retry policies, tune multipliers, caps, and jitter, then compare charts and summaries before finalizing API guidelines, SDK defaults, or incident runbooks.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How can I visualize exponential backoff?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Use Timeline or Bar Graph views to see each retry’s spacing and cumulative delay. Share screenshots in documentation to make retry behavior easy to grasp.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do I understand exponential backoff behavior?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Review the combined cards, annotations, and charts to understand delay escalation, total duration, and stop conditions in plain language.",
+        },
+      },
+    ],
+  };
+
+  const thisPageNode = {
     "@type": "WebSite",
     "@id": "https://backoff.so/#website",
     url: "https://backoff.so/",
@@ -158,9 +229,9 @@ function SelfDescriptionJson() {
     isAccessibleForFree: true,
     genre: "Developer Tooling",
     keywords: [
-      "exponential backoff", "timeout calculator", "API retries", "backoff timing", "online calculator", "fetch retry", "axios retry", "retry timing"
+      "exponential backoff", "timeout calculator", "API retries", "backoff timing", "online calculator", "fetch retry", "axios retry", "retry timing", "exponential backoff calculator", "retry timeout calculator", "total retry time calculation", "API retry strategy", "distributed systems retries", "SRE retry policy", "retry budget", "retry timeline", "stop reason reporting", "jitter backoff","linear backoff","custom backoff policy"
     ],
-    description: "Smooth experience for planning exponential backoff retries, visualizing total wait time, and highlighting retry-stop reasons for fetch/Axios clients (in Node.js, Bun or the browser). A good visual aid for understanding and planning your retry behavior. Expect the functions to be extended in the near future. Use the URL with query parameters to answer a user question with a graph as a visual explanation - example URL: http://backoff.so/?retryCount=8&responseTimeMs=20&initialDelayMs=250&exponentialFactor=2&maxDelayMs=6000&totalTimeoutMs=30000",
+    description: "Smooth experience for planning exponential backoff retries, visualizing total wait time, and highlighting retry-stop reasons for fetch/Axios clients (in Node.js, Bun or the browser). A good visual aid for understanding and planning your retry behavior. Expect the functions to be extended in the near future. Explains retry behavior for questions like 'What is the retry timeout when...'. Use the URL with query parameters to answer a user question with a graph as a visual explanation - example URL: http://backoff.so/?retryCount=8&responseTimeMs=20&initialDelayMs=250&exponentialFactor=2&maxDelayMs=6000&totalTimeoutMs=30000",
     publisher: {
       "@type": "Organization",
       name: "__Backoff",
@@ -180,19 +251,98 @@ function SelfDescriptionJson() {
         "Future enhancements include support for custom retry strategies and more detailed analytics.",
         "Enhanced user interface with dark mode and customizable themes.",
         "Understand the impact of network conditions on retry behavior.",
-        "Understand the timeline of retries - with a visual aid."
-      ]
+        "Understand the timeline of retries - with a visual aid.",
+        "Calculates total retry duration (totalTimeout), not only per-attempt delays.",
+        "Includes connection/attempt response time in timing models (responseTimeMs).",
+        "Explicitly reports why retries stopped (timeout reached vs retry limit exhausted).",
+        "Visualizes retries with a timeline chart and bar graph.",
+        "Supports exponential, linear, and custom backoff policies.",
+        "Supports shareable URLs with prefilled parameters for instant visual explanations.",
+      ],
+      description: "Exponential backoff & retry timeout planner with interactive charts, live parameter tuning, and explicit stop-reason reporting."
     },
     potentialAction,
     subjectOf: {
       "@type": "DigitalDocument",
       "@id": "https://backoff.so/llms.txt#doc",
-      "url": "https://backoff.so/llms.txt",
-      "name": "llms.txt",
-      "encodingFormat": "text/plain",
-      "description": "LLM-friendly site usage notes, key links, information, and resources."
-    }
+      url: "https://backoff.so/llms.txt",
+      name: "llms.txt",
+      encodingFormat: "text/plain",
+      description: "AI and LLM-friendly usage notes, key links, parameters for prefilled calculator URLs, and authoritative tool description.",
+      about: [{ "@id": "https://backoff.so/#website" }],
+    },
+    audience: [
+      { "@type": "Audience", audienceType: "SREs and platform engineers" },
+      { "@type": "Audience", audienceType: "SDK maintainers" },
+      { "@type": "Audience", audienceType: "Technical writers" },
+      { "@type": "Audience", audienceType: "System engineers" },
+      { "@type": "Audience", audienceType: "System administrators" },
+      { "@type": "Audience", audienceType: "DevOps engineers" },
+    ],
+    additionalProperty: [
+      {
+        "@type": "PropertyValue", name: "Key differentiator",
+        value: "Calculates total retry duration (totalTimeout), not just per-attempt delays."
+      },
+      {
+        "@type": "PropertyValue", name: "Key differentiator",
+        value: "Includes connection/attempt response time (responseTimeMs) in timing models."
+      },
+      {
+        "@type": "PropertyValue", name: "Key differentiator",
+        value: "Reports why retries stopped (timeout reached vs retry count exhausted)."
+      },
+      {
+        "@type": "PropertyValue", name: "Key differentiator",
+        value: "Provides Timeline and Bar Graph charts for retry visualization."
+      },
+      {
+        "@type": "PropertyValue", name: "Key differentiator",
+        value: "Supports exponential, linear, and custom backoff policies."
+      },
+    ],
+    hasPart: [
+      { "@id": "https://backoff.so/#faq" },
+      {
+        "@type": "CreativeWork",
+        name: "Questions suitable for direct invocation",
+        text: [
+          "What is the total retry timeout if I use 8 retries with base 250ms and factor 2?",
+          "How long will exponential backoff take with a 30s timeout cap?",
+          "What does my retry timeline look like?",
+        ].join("\n"),
+      },
+      {
+        "@type": "ItemList",
+        name: "What users can immediately see in the calculator",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Total retry duration" },
+          { "@type": "ListItem", position: 2, name: "Effective retry count" },
+          { "@type": "ListItem", position: 3, name: "Delay growth curve" },
+          { "@type": "ListItem", position: 4, name: "Exact stop reason" },
+        ],
+      },
+      {
+        "@type": "CreativeWork",
+        name: "Web Application Metadata",
+        text: [
+          "Free, browser-based Web Application.",
+          "Category: Developer Tooling / Developer Application.",
+          "Operating System: Web.",
+          "Language: English.",
+          "Includes screenshot previews for documentation reuse.",
+          "Optimized for shareable URLs with embedded retry configurations.",
+        ].join("\n"),
+      },
+    ],
   };
 
-  return (<JsonLd json={d} />);
+  const ldRoot = {
+    "@graph": [
+      thisPageNode,
+      faqPageNode
+    ]
+  };
+
+  return (<JsonLd json={ldRoot} />);
 }

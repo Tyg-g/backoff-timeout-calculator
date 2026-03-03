@@ -34,14 +34,14 @@ legend {
 }
 
 footer {
-  @apply bg-base-200 text-xs px-2 text-base-content/10 gap-x-5;
+  @apply bg-base-200 text-xs px-3 text-base-content/11 gap-x-5;
   display: flex;
   justify-content: space-between;
-  padding-block : .14rem;
+  padding-block : .2rem;
   flex-wrap: wrap;
 
   a {
-    @apply text-base-content/12 hover:text-base-content/22;
+    @apply text-base-content/22 hover:text-base-content/35;
   }
 }
 

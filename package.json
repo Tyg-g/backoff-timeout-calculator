@@ -1,9 +1,11 @@
 {
-  "name": "backoff-calculator",
+  "name": "backoff-timeout-calculator",
   "type": "module",
   "version": "0.1.0",
   "license": "GPL-3.0-only",
   "author": "Gabriel Cséfalvay",
+  "homepage": "https://github.com/Tyg-g/backoff-timeout-calculator",
+  "bugs": { "url": "https://github.com/Tyg-g/backoff-timeout-calculator/issues" },
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",

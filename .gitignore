@@ -1,3 +1,8 @@
+
+# Local
+*.local
+
+# Build
 dist
 .wrangler
 .output
@@ -8,20 +13,10 @@ app.config.timestamp_*.js
 
 # Environment
 .env
-.env*.local
+.env.*
 
 # dependencies
-/node_modules
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-*.launch
-.settings/
-
-# Temp
-gitignore
+node_modules
 
 # System Files
 .DS_Store

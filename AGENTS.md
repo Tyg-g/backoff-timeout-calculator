@@ -24,8 +24,7 @@
 - Until tests exist, manually verify via `npm run dev`, checking key routes (`/`, 404) and any new flows you add.
 
 ## Commit & Pull Request Guidelines
-- Git history is minimal; use clear, imperative commit subjects (e.g., `Add timeout chart view`, `Harden cache headers`). Group related changes per commit.
-- PRs should include: brief summary of changes, linked issue (if any), screenshots for UI updates, and manual test notes/steps so reviewers can reproduce.
+- Don't run any git operations! Never commit, never pull, never push!
 
 ## Security & Deployment Notes
 - `src/middlewares.mjs` sets caching and security headers; keep or extend rather than removing. Firebase hosting (`firebase.json`) mirrors similar headers—validate they remain aligned after changes.

@@ -1,8 +1,9 @@
 {
   "name": "backoff-calculator",
   "type": "module",
-  "license": "UNLICENSED",
-  "private": true,
+  "version": "0.1.0",
+  "license": "GPL-3.0-only",
+  "author": "Gabriel Cséfalvay",
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",

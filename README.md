@@ -79,12 +79,23 @@ Licensed under [GNU GPL version 3](https://www.gnu.org/licenses/gpl-3.0.html).
 
 ## TODO Backlog
 
-1. Implement jitter calculation
-1. Transition to TypeScript (for more roboust code)
-1. Transition to fully static rendering
-1. Remove Node dependency
+High prio.:
+
+1. Add "Copy Link For This Scenario" button
 1. Improve readability in light mode
+1. Improve mobile layout
 1. Add theme switch
-1. Better modularization of components
-1. Presets for common scenarios
-1. Personal presets (stored locally)
+1. Indicate the stop reason
+1. Harden URL param validation
+1. Implement jitter calculation (multiple strategies)
+
+Medium prio.:
+
+1. Add brief tooltip explanations
+1. Transition to TypeScript (for more roboust code)
+1. Transition to fully static rendering (for better caching and UX)
+1. Remove Node dependency
+1. Better modularization of components (separate calculation logic, parameter validation, metadata, and presentation)
+1. Presets for common scenarios (named examples for common retry scenarios, documenting their assumptions)
+1. Compare 2 scenarios (table or graph) side-by-side
+1. User presets (stored locally) (support naming, editing, deleting, and JSON import/export)
